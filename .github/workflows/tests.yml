@@ -1,49 +1,44 @@
-name: Test Automation CI
+name: CI Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   pull_request:
-    branches: [ main ]
+    branches: ["main"]
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name:  Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name:  Setup Node
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: "npm"
 
-      - name:  Install dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      # -------------------------------
-      #  Vitest: Unit + Integration Tests
-      # -------------------------------
-      - name:  Run Vitest tests
-        run: npm test
+      - name: Run Unit + Integration Tests (Vitest)
+        run: npm run test:ci
 
-      # -------------------------------
-      #  Start the Express server
-      # -------------------------------
-      - name:  Start server
-        run: npm run dev &
+      # ----------- INICIAR SERVIDOR PARA CYPRESS ----------------
+      - name: Start API server
+        run: npm start &
       
-      - name:  Wait for server to start
-        run: npx wait-on http://localhost:3000
+      - name: Wait for server to be ready
+        uses: jakejarvis/wait-action@v0.1.1
+        with:
+          url: http://localhost:3000
 
-      # -------------------------------
-      #  Cypress E2E Tests
-      # -------------------------------
-      - name:  Cypress Run (E2E)
+      # ------------------- CYPRESS ------------------------------
+      - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
-          start: npm run dev
-          wait-on: http://localhost:3000
+          start: ""
+          wait-on: ""
           browser: chrome
