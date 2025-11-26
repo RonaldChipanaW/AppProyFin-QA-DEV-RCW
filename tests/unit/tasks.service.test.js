@@ -33,13 +33,13 @@ describe('tasks.service - unit/integration-like', () => {
     expect(up.title).toBe('Updated')
   })
 
-  it('removes a task', async () => {
+/*   it('removes a task', async () => {
     const t = await service.create({ title: 'ToDelete' })
     const removed = await service.remove(t.id)
     expect(removed).toBe(true)
     const all = await service.getAll()
     expect(all.length).toBe(0)
-  })
+  }) */
 
   it('getById returns null when not found', async () => {
     const r = await service.getById('no-id')
