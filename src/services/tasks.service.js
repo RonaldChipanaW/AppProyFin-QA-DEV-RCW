@@ -43,11 +43,12 @@ export async function update(id, data) {
   return list[idx]
 }
 
+
+
 export async function remove(id) {
-  const list = await readDB()
-  const idx = list.findIndex(t => t.id === id)
-  if (idx === -1) return false
-  list.splice(idx, 1)
-  await writeDB(list)
-  return true
+  const tasks = await this.getAll();
+  const newList = tasks.filter(t => t.id !== Number(id));
+
+  await fs.writeFile(DB_PATH, JSON.stringify(newList, null, 2));
+  return true;
 }
