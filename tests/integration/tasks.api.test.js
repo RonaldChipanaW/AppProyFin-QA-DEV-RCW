@@ -40,10 +40,17 @@ describe('Tasks API - integration', () => {
     expect(res.body.title).toBe('Updated')
   })
 
-  it('DELETE /tasks/:id -> 204', async () => {
-    const create = await request(app).post('/tasks').send({ title: 'To Delete' })
-    const id = create.body.id
-    const res = await request(app).delete('/tasks/' + id)
-    expect(res.status).toBe(204)
-  })
+  it("DELETE /tasks/:id -> 204", async () => {
+    const task = await request(app)
+      .post("/tasks")
+      .send({ title: "to-delete" })
+      .expect(201);
+  
+    const res = await request(app)
+      .delete(`/tasks/${task.body.id}`)
+      .expect(204);
+  
+    console.log("DELETE RESPONSE:", res.text);
+  });
+  
 })

@@ -28,3 +28,16 @@ export async function remove(req, res) {
   const deleted = await service.remove(req.params.id)
   if (!deleted) return res.status(204).send()
 }
+
+export async function removeTask(req, res) {
+  try {
+    const id = req.params.id;
+    await taskService.remove(id);
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error("DELETE error:", error);
+    return res.status(500).json({ error: "Internal error" });
+  }
+}
+
+
